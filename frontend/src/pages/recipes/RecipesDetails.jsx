@@ -1,28 +1,29 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getRecipes } from "../redux/recipes/actions";
-import { queryMaker } from "../utills/helpers";
-import Card from "./Card";
+import React, { useEffect, useState } from 'react'
+import Navbar from '../navbar/Navbar'
+import { fetchRecipeDetails } from '../../utills/api';
+import {  useNavigate, useParams  } from 'react-router-dom';
+import {FaDotCircle} from 'react-icons/fa'
 
-const Recipes = () => {
-  const { data, query, isLoad } = useSelector((store) => store.recipesReducer);
-  const dispatch = useDispatch();
-  useEffect(() => {
-    const q = queryMaker(query);
-    dispatch(getRecipes(q));
-  }, [query]);
-  console.log(data);
+const RecipesDetails = () => {
+  const {recipeId}= useParams();
+  const navigate= useNavigate();
+  const [data,setData]= useState({});
+  const [isLoad,setIsLoad]= useState(false);
+  useEffect(()=>{
+    if(!recipeId){
+      navigate("/recipe")
+    }
+    setIsLoad(true);
+    fetchRecipeDetails(recipeId)
+    .then((res)=>{
+      console.log(res.data)
+      setData(res.data);
+      setIsLoad(false);
+    })
+  },[])
   return (
-    <div className=" bg-gray-100 py-8">
-     <div>
-        <div className="grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 gap-5 w-[95%] m-auto">
-        {data &&
-        data.length > 0 &&
-        data.map((el) => {
-          return <Card {...el} />;
-        })}
-        </div>
-     </div>
+    <div>
+      <Navbar/>
       {isLoad && (
         <div className="flex items-center justify-center py-10">
           <div role="status">
@@ -46,18 +47,24 @@ const Recipes = () => {
           </div>
         </div>
       )}
-      {data.length <= 0 && (
-        <div className="flex items-center py-10 justify-center">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-700">No Data Found</h1>
-            <p className="text-gray-400">
-              Type in Search Box, Find your recipes ...
-            </p>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
+   {!isLoad&& <div className='w-[90%] m-auto py-8'>
+      <div ><img src={data.image} className='object-cover object-center w-full h-[25rem] rounded-md' alt={data.title} /></div>
+      <div className='flex items-center gap-5 '>
+      <h1 className='text-3xl font-bold py-3'>{data.title}</h1>
+       {data.vegetarian==true?
+         <FaDotCircle className='w-[26px] h-[26px] rounded-full bg-green-600 text-green-600' />:<FaDotCircle className='w-8 h-8 rounded-full bg-red-600 text-red-600'/>
 
-export default Recipes;
+       }
+      </div>
+      <p dangerouslySetInnerHTML={{__html:data.summary}} />
+<div className=' flex flex-col gap-2 pt-6'>
+  <span className='text-2xl font-bold '>Instructions</span>
+  <p dangerouslySetInnerHTML={{__html:data.instructions}} />
+</div>
+    </div>}
+    </div>
+  )
+}
+
+
+export default RecipesDetails

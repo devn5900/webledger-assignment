@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import useThrottle from '../hooks/useThrottle';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getRecipes, setQuery } from '../redux/recipes/actions';
 
 const Search = () => {
+  const {query}= useSelector(store=>store.recipesReducer);
     const [search,setSearch]=useState("");
     const s= useThrottle(search,600);
     const dispatch= useDispatch();
@@ -13,9 +14,9 @@ const Search = () => {
       }
     },[s]) 
   return (
-    <div className='p-4'>
-        <div className='flex items-center justify-center'>
-            <input type='search' value={search} onChange={(e)=>setSearch(e.target.value)} placeholder='Search Recipes ...' className=' bg-gray-100 py-2 rounded-md  px-8 w-[30%]' />
+    <div >
+        <div >
+            <input type='search' value={search} onChange={(e)=>setSearch(e.target.value)} placeholder='Search Recipes ...' className=' bg-gray-100 py-2 rounded-md  px-8 w-[20rem]' />
         </div>
     </div>
   )

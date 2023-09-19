@@ -1,19 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
 
 const useThrottle = (value, delay) => {
-  const throttleId = useRef(false);
-  const [thrott, setThrott] = useState("");
+  const [throttleValue, setThrottleValue] = useState(value);
 
   useEffect(() => {
-    if (!throttleId.current) {
-      throttleId.current = true;
-      setTimeout(() => {
-        throttleId.current = false;
-        setThrott(value);
-      }, delay);
-    }
+    const handler = setTimeout(() => {
+      setThrottleValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
   }, [value, delay]);
-  return thrott;
+
+  return throttleValue;
   
 };
 

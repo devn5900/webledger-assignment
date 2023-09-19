@@ -5,3 +5,23 @@ export const queryMaker=(query)=>{
     }).join("&")
     return queryString;
 }
+
+export const sortBy = [
+    "popularity",
+    "healthiness",
+    "price",
+    "time",
+    "random",
+    "max-used-ingredients",
+    "min-missing-ingredients",
+    "alcohol",
+    "caffeine",
+    "copper",
+    "energy",
+    "calories",
+    "calcium",
+    "carbohydrates",
+    "carbs",
+    "choline"
+  ];
+  
