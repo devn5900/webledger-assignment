@@ -20,7 +20,7 @@ const getInformationAboutRecipe=async(req,res)=>{
     const {recipeId}= req.params;
 
     try {
-        const result= await axios.get(makeQueryParams({ids:recipeId},"/recipes/informationBulk"),{
+        const result= await axios.get(`https://api.spoonacular.com/recipes/${recipeId}/information`,{
             headers
         });
         return res.status(200).json(result.data)

@@ -34,8 +34,20 @@ const addFavorites=async(req,res)=>{
         
     }
 }
-
+const removeFromFav=async(req,res)=>{
+    const {userId}= req.body;
+    const {favId}= req.params;
+    try {
+        const status= await FavoriteModel.findOneAndUpdate({userId},{
+            $pull:{favorites:favId}
+        });
+        return res.status(201).json({msg:"Removed from Favorites"})
+    } catch (error) {
+        
+    }
+}
 module.exports={
     getFavorites,
-    addFavorites
+    addFavorites,
+    removeFromFav
 }
